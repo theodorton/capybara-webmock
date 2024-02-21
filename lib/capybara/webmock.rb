@@ -62,7 +62,7 @@ module Capybara
         @stdout = nil
       end
 
-      def firefox_profile
+      def firefox_options
         proxy_host = '127.0.0.1'
         profile = ::Selenium::WebDriver::Firefox::Profile.new
         profile["network.proxy.type"] = 1
@@ -71,6 +71,7 @@ module Capybara
         profile["network.proxy.ssl"] = proxy_host
         profile["network.proxy.ssl_port"] = port_number
         profile
+        ::Selenium::WebDriver::Firefox::Options.new(profile: profile)
       end
 
       def chrome_options
@@ -80,7 +81,9 @@ module Capybara
       end
 
       def chrome_headless_options
-        chrome_options.tap { |options| options.headless! }
+        chrome_options.tap do |options|
+          options.add_argument "--headless"
+        end
       end
 
       def phantomjs_options
@@ -170,15 +173,15 @@ Capybara::Webmock.kill_timeout ||= 5
 Capybara::Webmock.start_timeout ||= 30
 
 Capybara.register_driver :capybara_webmock do |app|
-  Capybara::Selenium::Driver.new(app, browser: :firefox, profile: Capybara::Webmock.firefox_profile)
+  Capybara::Selenium::Driver.new(app, browser: :firefox, options: Capybara::Webmock.firefox_options)
 end
 
 Capybara.register_driver :capybara_webmock_chrome do |app|
-  Capybara::Selenium::Driver.new(app, browser: :chrome, capabilities: [Capybara::Webmock.chrome_options])
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: Capybara::Webmock.chrome_options)
 end
 
 Capybara.register_driver :capybara_webmock_chrome_headless do |app|
-  Capybara::Selenium::Driver.new(app, browser: :chrome, capabilities: [Capybara::Webmock.chrome_headless_options])
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: Capybara::Webmock.chrome_headless_options)
 end
 
 Capybara.register_driver :capybara_webmock_poltergeist do |app|

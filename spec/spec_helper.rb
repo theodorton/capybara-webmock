@@ -21,4 +21,6 @@ RSpec.configure do |config|
     Capybara::Webmock.kill_timeout = 5
     Capybara::Webmock.start_timeout = 5
   end
+
+  config.example_status_persistence_file_path = "tmp/examples.txt"
 end

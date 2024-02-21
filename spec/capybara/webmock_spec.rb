@@ -6,7 +6,7 @@ require 'spec_helper'
 
 describe Capybara::Webmock do
   let(:firefox_profile) do
-    Capybara::Webmock.firefox_profile.instance_variable_get("@additional_prefs")
+    Capybara::Webmock.firefox_options.profile.instance_variable_get(:@additional_prefs)
   end
 
   let(:chrome_options_args) do
